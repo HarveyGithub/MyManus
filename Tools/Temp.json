@@ -1,0 +1,19 @@
+{
+    "Read File": {
+        "type": "function",
+        "function": {
+            "name": "Read File",
+            "description": "读取文件内容，返回文件内容，注意不要访问./目录外的任何文件或目录",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "FilePath": {
+                        "type": "string",
+                        "description": "要读取的文件路径"
+                    }
+                },
+                "required": ["FilePath"]
+            }
+        }
+    }
+}

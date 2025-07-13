@@ -100,3 +100,68 @@ else:
     print('Manus didn\'t call any tools.')
 
 print('\n', end='')
+# 新增功能模块
+MAX_STEPS = 10  # 防无限循环
+execution_history = []  # 追踪任务状态
+
+def safe_tool_call(tool_name, arguments):
+    """安全执行工具并处理异常"""
+    try:
+        if tool := tools_mapping.get(tool_name):
+            return tool(**arguments)
+        return f"错误：未注册的工具 {tool_name}"
+    except Exception as e:
+        return f"工具执行错误：{str(e)}"
+
+# 重构任务执行循环
+def execute_task_plan():
+    step_count = 0
+    while step_count < MAX_STEPS:
+        response = Main_Model.chat.completions.create(
+            messages=messages,
+            model=Main_Model_Name,
+            tools=Tools if step_count > 0 else Todo_List_tools,
+            tool_choice="required" if step_count == 0 else "auto",
+            temperature=0.3,  # 执行阶段降低随机性
+            stream=False  # 非流式保证工具调用完整性
+        )
+        
+        msg = response.choices[0].message
+        messages.append({
+            "role": "assistant",
+            "content": msg.content,
+            "tool_calls": msg.tool_calls
+        })
+        
+        # 工具调用处理
+        if msg.tool_calls:
+            for tool_call in msg.tool_calls:
+                tool_name = tool_call.function.name
+                args = json.loads(tool_call.function.arguments)
+                result = safe_tool_call(tool_name, args)
+                
+                execution_history.append({
+                    "step": step_count,
+                    "tool": tool_name,
+                    "status": "SUCCESS" if "错误" not in result else "FAILED",
+                    "output": result[:300]  # 截断长输出
+                })
+                
+                messages.append({
+                    "role": "tool",
+                    "content": result,
+                    "tool_call_id": tool_call.id
+                })
+        else:  # 最终输出
+            if "[TASK_COMPLETE]" in msg.content:
+                save_final_report(execution_history)
+                return True
+        
+        step_count += 1
+    return False  # 超时终止
+
+# 初始化后调用
+if __name__ == "__main__":
+    # ... (初始化代码)
+    success = execute_task_plan()
+    print(f"任务{'完成' if success else '中断'}")
