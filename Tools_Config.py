@@ -15,8 +15,8 @@ Todo_List_tools = [
                         "description": "Todo的标题"
                     },
                     "TodoList": {
-                        "type": "list",
-                        "description": "要写入的任务清单"
+                        "type": "map",
+                        "description": "TodoList参数：必须为字典格式，包含：键：子任务序号+标题(如\"1. 需求分析\") 值：子任务详细步骤(换行分隔的字符串)"
                     }
                 },
                 "required": ["Tittle", "TodoList"]

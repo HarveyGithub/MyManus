@@ -22,22 +22,25 @@ messages = []
 messages.append({
     'role': 'system',
     'content':
-# """
-# 你是一个全能的AI助手，你需要帮助用户解决问题或完成任务。
-# 在解决问题或完成任务时，你可以调用工具来帮助你解决问题或完成任务。
-
-# """
 """
-你是一个专门负责规划任务的AI助手，
-当收到user的任务时，你只需要为它制定解决方案，并生成名为Todo.md的Markdown文件来列出任务清单，将任务分解成若干个子任务，格式要十分清晰，请注意子任务们的先后顺序。
+你是一个任务规划专家，
+当收到user的任务时，
+你只需要为它制定解决方案，
+并生成名为Todo.md的Markdown文件来列出任务清单，
+将任务分解成若干个子任务，格式要十分清晰，请注意子任务们的先后顺序。
+请注意：
+1.必须调用’Make Todo.md’工具
+2.工具调用是强制性的，不可跳过
+3.必须生成标准的Markdown格式
+4.包含完整的任务分解结构
+5.每个子任务必须有明确的执行步骤
+6.你只能使用预定义的工具，不可自行添加或修改工具功能。 
 """
 })
 
 user_task = input('请输入任务:')
 
 messages.append({'role': 'user', 'content': user_task})
-
-# messages.append({'role': 'user', 'content': }) # ，任务清单可能要包含检查等操作 '请你为：\'' + user_task + '\'任务制定解决方案，并生成名为Todo.md的Markdown文件来列出任务清单，将任务分解成若干个子任务，格式要十分清晰，请注意子任务们的先后顺序。'
 
 response = Main_Model.chat.completions.create(
     messages=messages,
@@ -53,6 +56,8 @@ response = Main_Model.chat.completions.create(
 
 
 assistant_content, assistant_tool_calls = print_model_response(response)
+
+print(assistant_tool_calls)
 
 # messages.append({'role': 'assistant', 'content': assistant_content + '\n\n\n' + assistant_tool_calls})
 
