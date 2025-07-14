@@ -1,6 +1,6 @@
 import json
 import openai
-from Tools.Tools import Run_Linux_Terminal_Command, Make_Todo_File#, Read_File
+from Tools.Tools import Run_Linux_Terminal_Command, Make_Todo_File, Read_File, Write_File, Append_File
 
 def load_config(json_path):
     data = ''
@@ -20,9 +20,10 @@ for tool in Tools_list:
 
 tools_mapping = {
     'Run Linux Terminal Command': Run_Linux_Terminal_Command,
-    'Make Todo.md': Make_Todo_File
-    # ,
-    # 'Read File': Read_File
+    'Make Todo.md': Make_Todo_File,
+    'Write File': Write_File,
+    'Append File': Append_File,
+    'Read File': Read_File
 }
 
 config = load_config("./Config/config.json")
