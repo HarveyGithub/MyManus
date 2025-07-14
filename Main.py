@@ -90,7 +90,7 @@ messages.append({
 
 # user_task = input('请输入任务:')
 # user_task = "编写一个python的贪吃蛇游戏"
-user_task = "请创建一个python文件，使它能够实现“Hello,world”"
+user_task = "写一个html，实现一个可以和用户交互的按钮"
 
 messages.append({'role': 'user', 'content': user_task})
 
