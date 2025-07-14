@@ -45,7 +45,7 @@ def tackle_tool_calls(assistant_tool_calls):
                 print('|- With arguments: ', tool.function.arguments)
                 arguments_dict = json.loads(tool.function.arguments)
                 output = tool_to_call(**arguments_dict)
-                print('|-  Tool output: ', output)
+                print('|  Tool returned: ', output)
                 messages.append({'role': 'tool', 'content': output})
             else:
                 print('|-  This tool not found:\"', tool.function.name,"\"")
@@ -86,7 +86,6 @@ system_prompt+='\n'+description
 messages.append({
     'role': 'system',
     'content': system_prompt
-
 })
 
 # user_task = input('请输入任务:')
@@ -99,8 +98,8 @@ response = Main_Model.chat.completions.create(
     messages=messages,
     model=Main_Model_Name,
     tools=Todo_List_tools,
-    tool_choice='required',
-    temperature=0.5,
+    tool_choice="required",
+    temperature=0.3,
     top_p=0.9,
     stream=True
 )
@@ -119,7 +118,7 @@ while True:
     response = Main_Model.chat.completions.create(
         messages=messages,
         model=Main_Model_Name,
-        tools=Tools, #你填错工具列表了，应该是Tools
+        tools=Tools,
         tool_choice='auto',
         temperature=0.3,
         top_p=0.7,

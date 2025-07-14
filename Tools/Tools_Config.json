@@ -20,7 +20,23 @@
             }
         }
     },
-    
+    "Run Linux Terminal Command": {
+        "type": "function",
+        "function": {
+            "name": "Run Linux Terminal Command",
+            "description": "执行Linux终端命令，注意不要访问./目录外的任何文件或目录，你无法调出显示类的窗口(如gedit等)或交互类窗口(如vim, nano, vi等)，默认在./WorkSpace/目录下执行，python的版本为3.8",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "Command": {
+                        "type": "string",
+                        "description": "要执行的Linux终端命令"
+                    }
+                },
+                "required": ["Command"]
+            }
+        }
+    },
     "Finish Task": {
         "type": "function",
         "function": {

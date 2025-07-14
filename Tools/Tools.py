@@ -1,13 +1,19 @@
+import os
 import subprocess
 
 def Run_Linux_Terminal_Command(Command):
     result = subprocess.run(
         'cd ./WorkSpace/ && ' + Command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         shell=True,
-        capture_output=True,
-        text=True
+        text=True,
+        env=os.environ.copy()
     )
-    return result.stdout
+    if result.stdout or result.stderr:
+        return f"Stdout:{result.stdout}\nStderr:{result.stderr}"
+    else:
+        return "Ran command successfully"
 
 def Make_Todo_File(Tittle, TodoList):
     with open("./WorkSpace/Todo.md", "w") as f:
