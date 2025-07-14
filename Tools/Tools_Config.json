@@ -36,5 +36,12 @@
                 "required": ["Command"]
             }
         }
+    },
+    "Finish Task": {
+        "type": "function",
+        "function": {
+            "name": "Finish Task",
+            "description": "当所有的任务完成时，请调用此工具"
+        }
     }
 }

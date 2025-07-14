@@ -15,7 +15,8 @@ Todo_List_tools = [Tools_list["Make Todo.md"]]
 
 Tools = []
 for tool in Tools_list:
-    Tools.append(Tools_list[tool])
+    if (tool != "Make Todo.md"):
+        Tools.append(Tools_list[tool])
 
 tools_mapping = {
     'Run Linux Terminal Command': Run_Linux_Terminal_Command,

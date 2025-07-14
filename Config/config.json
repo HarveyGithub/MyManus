@@ -7,6 +7,6 @@
     "Helper_Model": {
         "api_key": "ollama",
         "base_url": "http://localhost:11434/v1/",
-        "Model_Name": "qwen2.5:1.5b"
+        "Model_Name": "qwen2.5:7b"
     }
 }

@@ -20,6 +20,29 @@ def print_model_response(response):
     return assistant_content, assistant_tool_calls
 
 messages = []
+
+def tackle_tool_calls(assistant_tool_calls):
+    will_continue = True
+    
+    if assistant_tool_calls:
+        print(f'Manus called {len(assistant_tool_calls)} tools:')
+        for tool in assistant_tool_calls:
+            if tool.function.name == "Finish Task":
+                will_continue = False
+            if tool_to_call := tools_mapping.get(tool.function.name):
+                print('|- Calling tool: ', tool.function.name)
+                print('|  With arguments: ', tool.function.arguments)
+                arguments_dict = json.loads(tool.function.arguments)
+                output = tool_to_call(**arguments_dict)
+                messages.append({'role': 'tool', 'content': output})
+            else:
+                print('|-  This tool not found: ', tool.function.name)
+    else:
+        print('Manus didn\'t call any tools.')
+    
+    return will_continue
+    
+
 messages.append({
     'role': 'system',
     'content':
@@ -63,10 +86,9 @@ messages.append({
 """
 })
 
-# What are you doing???
-
 # user_task = input('请输入任务:')
-user_task = "创建一个python文件，使它能够实现“Hello,world”"
+# user_task = "编写一个python的贪吃蛇游戏"
+user_task = "请创建一个python文件，使它能够实现“Hello,world”"
 
 messages.append({'role': 'user', 'content': user_task})
 
@@ -84,22 +106,23 @@ response = Main_Model.chat.completions.create(
 
 assistant_content, assistant_tool_calls = print_model_response(response)
 
-print(assistant_tool_calls)
+messages.append({'role': 'assistant', 'content': assistant_content, 'tool_calls': assistant_tool_calls})
 
-# messages.append({'role': 'assistant', 'content': assistant_content + '\n\n\n' + assistant_tool_calls})
+tackle_tool_calls(assistant_tool_calls)
 
-if assistant_tool_calls:
-    print(f'Manus called {len(assistant_tool_calls)} tools:')
-    for tool in assistant_tool_calls:
-        if tool_to_call := tools_mapping.get(tool.function.name):
-            print('|- Calling tool: ', tool.function.name)
-            arguments_dict = json.loads(tool.function.arguments)
-            output = tool_to_call(**arguments_dict)
-            print('|  The tool returned: ', output)
-            messages.append({'role': 'tool', 'content': output})
-        else:
-            print('|-  This tool not found: ', tool.function.name)
-else:
-    print('Manus didn\'t call any tools.')
+messages.append({'role': 'system', 'content': '你现在进入了第二阶段，请按照Todo.md的步骤开始执行任务，可以调用相关而工具'})
 
-print('\n', end='')
+while True:
+    response = Main_Model.chat.completions.create(
+        messages=messages,
+        model=Main_Model_Name,
+        tools=Tools, #你填错工具列表了，应该是Tools
+        tool_choice='auto',
+        temperature=0.3,
+        top_p=0.7,
+        stream=True
+    )
+    assistant_content, assistant_tool_calls = print_model_response(response)
+    messages.append({'role': 'assistant', 'content': assistant_content, 'tool_calls': assistant_tool_calls})
+    if not tackle_tool_calls(assistant_tool_calls):
+        break
