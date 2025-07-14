@@ -1,18 +1,14 @@
-# 创建Python文件实现'Hello, World'
+# 创建一个Python文件实现‘Hello,world’
 
-## 1. 创建新Python文件
+## 1. 创建一个新的Python文件。
 
-- [ ] 创建一个新的Python文件，命名为hello_world.py
+- [ ] 打开文本编辑器或IDE（例如Visual Studio Code）
 
-## 2. 编写输出代码
+## 2. 在该文件中写入'Hello, world'程序。
 
-- [ ] 在hello_world.py中添加一行代码：print('Hello, world')
+- [ ] 在新打开的文件中输入：print('Hello, world')
 
-## 3. 运行并验证
+## 3. 保存并关闭文件。
 
-- [ ] 打开命令行工具
-
-- [ ] 导航到包含hello_world.py的目录
-
-- [ ] 执行命令 `python hello_world.py` 或者根据操作系统调整相应的Python环境路径
+- [ ] 按下Ctrl + S键保存文件，然后关闭编辑器或IDE
 
