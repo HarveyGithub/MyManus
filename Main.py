@@ -1,5 +1,8 @@
 import json
+import os
 from Load_config import Todo_List_tools, Tools, tools_mapping, Main_Model, Helper_Model, Main_Model_Name, Helper_Model_Name
+# os.environ["http_proxy"] = "http://127.0.0.1:11434"
+# os.environ["https_proxy"] = "http://127.0.0.1:11434"
 def print_model_response(response):
     print('Manus:')
     assistant_content = ''

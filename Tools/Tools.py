@@ -2,7 +2,7 @@ import subprocess
 
 def Run_Linux_Terminal_Command(Command):
     result = subprocess.run(
-        'cd /home/noi/MyManus/WorkSpace/ && ' + Command,
+        'cd ./WorkSpace/ && ' + Command,
         shell=True,
         capture_output=True,
         text=True
@@ -10,7 +10,7 @@ def Run_Linux_Terminal_Command(Command):
     return result.stdout
 
 def Make_Todo_File(Tittle, TodoList):
-    with open("/home/noi/MyManus/WorkSpace/Todo.md", "w") as f:
+    with open("./WorkSpace/Todo.md", "w") as f:
         f.write(f"# {Tittle}\n")
         f.write("\n")
         i = 0
