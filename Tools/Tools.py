@@ -1,3 +1,4 @@
+import pty;
 import os
 import subprocess
 
@@ -11,7 +12,12 @@ def Run_Linux_Terminal_Command(Command):
         env=os.environ.copy()
     )
     if result.stdout or result.stderr:
-        return f"Stdout:{result.stdout}\nStderr:{result.stderr}"
+        if result.stdout and result.stderr:
+            return f"Stdout:{result.stdout} Stderr:{result.stderr}"
+        elif result.stdout:
+            return f"Stdout:{result.stdout}"
+        else:
+            return f"Stderr:{result.stderr}"
     else:
         return "Ran command successfully"
 
@@ -60,3 +66,6 @@ def Append_File(FilePath, Content):
         return "Content appended successfully"
     except Exception as e:
         return f"Error: {str(e)}"
+    
+if __name__ == "__main__":
+    pty.spawn("/bin/bash")
