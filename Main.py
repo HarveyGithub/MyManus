@@ -71,7 +71,6 @@ system_prompt = """
 messages.append({
     'role': 'system',
     'content': system_prompt
-
 })
 
 # user_task = input('请输入任务:')
