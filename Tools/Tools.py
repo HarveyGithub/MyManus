@@ -29,9 +29,28 @@ def Make_Todo_File(Tittle, TodoList):
     
     return "Todo.md file created successfully."
 
-# def Read_File(FilePath):
-#     content = ""
-#     with open(FilePath, "r") as f:
-#         content = f.read()
-#     f.close()
-#     return content
+def Read_File(FilePath):
+    try:
+        with open("./WorkSpace/" + FilePath, "r") as f:
+            content = f.read()
+        return content
+    except FileNotFoundError:
+        return "Error: File not found"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def Write_File(FilePath, Content):
+    try:
+        with open("./WorkSpace/" + FilePath, "w") as f:
+            f.write(Content)
+        return "File written successfully"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def Append_File(FilePath, Content):
+    try:
+        with open("./WorkSpace/" + FilePath, "a") as f:
+            f.write(Content)
+        return "Content appended successfully"
+    except Exception as e:
+        return f"Error: {str(e)}"

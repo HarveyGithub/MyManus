@@ -43,5 +43,64 @@
             "name": "Finish Task",
             "description": "当所有的任务完成时，请调用此工具"
         }
+    },
+    "Read File": {
+        "type": "function",
+        "function": {
+            "name": "Read File",
+            "description": "读取WorkSpace目录下的文件内容",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "FilePath": {
+                        "type": "string",
+                        "description": "要读取的文件路径(相对于WorkSpace目录)"
+                    }
+                },
+                "required": ["FilePath"]
+            }
+        }
+    },
+    "Write File": {
+        "type": "function",
+        "function": {
+            "name": "Write File",
+            "description": "向WorkSpace目录下的文件写入内容",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "FilePath": {
+                        "type": "string",
+                        "description": "要写入的文件路径(相对于WorkSpace目录)"
+                    },
+                    "Content": {
+                        "type": "string",
+                        "description": "要写入的内容"
+                    }
+                },
+                "required": ["FilePath", "Content"]
+            }
+        }
+    },
+    "Append File": {
+        "type": "function",
+        "function": {
+            "name": "Append File",
+            "description": "向WorkSpace目录下的文件追加内容",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "FilePath": {
+                        "type": "string",
+                        "description": "要追加的文件路径(相对于WorkSpace目录)"
+                    },
+                    "Content": {
+                        "type": "string",
+                        "description": "要追加的内容"
+                    }
+                },
+                "required": ["FilePath", "Content"]
+            }
+        }
     }
 }

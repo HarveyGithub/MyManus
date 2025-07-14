@@ -41,29 +41,9 @@ def tackle_tool_calls(assistant_tool_calls):
         print('Manus didn\'t call any tools.')
     
     return will_continue
-    
 
-messages.append({
-    'role': 'system',
-    'content':
-# """
-# 你是一个人工智能助手，
-# 当收到user的任务时，
-# 你首先需要为它制定解决方案，
-# 并生成名为Todo.md的Markdown文件来列出任务清单，
-# 将任务分解成若干个子任务，格式要十分清晰，请注意子任务们的先后顺序。
-# 请注意：
-# 1.必须调用'Make Todo.md'工具
-# 2.工具调用是强制性的，不可跳过
-# 3.必须生成标准的Markdown格式
-# 4.包含完整的任务分解结构
-# 5.每个子任务必须有明确的执行步骤
-# 6.你只能使用预定义的工具，不可自行添加或修改工具功能。
-# 制定完任务。要分点执行，用户会发给你对应的步骤，你必须按照步骤执行，并将执行结果反馈给用户。
-# 必要时调用工具
-# ""
-"""
-你是一个人工智能助手，负责帮助用户完成复杂的任务。
+system_prompt = """
+你是一个人工智能助手，负责帮助用户完成任务。
 你的工作分为两个阶段：
 第一阶段：任务分解
   1. 当收到用户的任务时，你首先需要为它制定解决方案。
@@ -76,14 +56,21 @@ messages.append({
   1. 在生成Todo.md之后，你需要自动按照文件中的顺序执行每一个子任务。
   2. 对于每个子任务，根据步骤描述调用相应的工具（只能使用预定义的工具）。
   3. 如果某个子任务需要多个步骤（例如先调用工具A，再调用工具B），则按步骤执行。
-  4. 在执行过程中，将每个工具调用的结果记录下来，并作为下一步的上下文。
-  5. 当所有子任务执行完毕后，向用户报告最终结果。
+  4. 你只能使用预定义工具，不能使用也无法使用像vscode之类的桌面工具。
+  5. 在执行过程中，将每个工具调用的结果记录下来，并作为下一步的上下文。
+  6. 当所有子任务执行完毕后，向用户报告最终结果。
 注意：
   - 在任务分解阶段，你只能使用'Make Todo.md'工具。
   - 在任务执行阶段，你可以使用所有预定义的工具（除了'Make Todo.md'）。
+  - 请把工具调用请求写入tool_calls字段，而并不是content字段。
   - 如果某个子任务不需要调用工具（例如只需要生成一段文本），那么你可以直接生成文本，然后继续下一个子任务。
   - 在任务执行阶段，如果遇到错误（例如工具调用失败），你应该暂停并通知用户，等待用户的指示，或者尝试修复（如果有备用方案）。
 """
+# 这是每个工具的具体调用功能和需要的参数（用json格式表示）：
+messages.append({
+    'role': 'system',
+    'content': system_prompt
+
 })
 
 # user_task = input('请输入任务:')
@@ -110,7 +97,7 @@ messages.append({'role': 'assistant', 'content': assistant_content, 'tool_calls'
 
 tackle_tool_calls(assistant_tool_calls)
 
-messages.append({'role': 'system', 'content': '你现在进入了第二阶段，请按照Todo.md的步骤开始执行任务，可以调用相关而工具'})
+messages.append({'role': 'system', 'content': '你现在进入了第二阶段，请按照Todo.md的步骤开始执行任务，可以调用相关工具'})
 
 while True:
     response = Main_Model.chat.completions.create(
@@ -122,6 +109,7 @@ while True:
         top_p=0.7,
         stream=True
     )
+    print(messages)
     assistant_content, assistant_tool_calls = print_model_response(response)
     messages.append({'role': 'assistant', 'content': assistant_content, 'tool_calls': assistant_tool_calls})
     if not tackle_tool_calls(assistant_tool_calls):
