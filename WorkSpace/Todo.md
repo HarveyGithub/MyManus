@@ -1,14 +1,8 @@
-# 创建Python文件实现Hello, World程序
+# 创建Python文件实现Hello,world
 
-## 1. 确定项目结构
+## 1. 生成Python脚本内容
 
-- [ ] 确定需要创建一个名为hello_world.py的文件
+- [ ] {'step': '生成包含print("Hello, world")语句的字符串'}
 
-## 2. 编写代码
-
-- [ ] 在文件中编写print('Hello, world')这一行代码
-
-## 3. 保存并运行
-
-- [ ] 使用Python解释器运行此文件
+- [ ] {'step': '调用Write File工具将内容写入hello_world.py'}
 

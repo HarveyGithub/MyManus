@@ -2,7 +2,7 @@
     "Main_Model": {
         "api_key": "ollama",
         "base_url": "http://localhost:11434/v1/",
-        "Model_Name": "qwen2.5:7b"
+        "Model_Name": "qwen3:8b"
     },
     "Helper_Model": {
         "api_key": "ollama",

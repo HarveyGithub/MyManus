@@ -1,8 +1,17 @@
 import json
 import os
 from Load_config import Todo_List_tools, Tools, tools_mapping, Main_Model, Helper_Model, Main_Model_Name, Helper_Model_Name
+
+# 合并所有工具描述
+with open('./Tools/Tools_Config.json', 'r', encoding='utf-8') as f:
+    tools_config = json.load(f)
+    description=str(tools_config)
+    # description = '\n'.join([tool['function']['description'] 
+    #                         for tool in tools_config.values() 
+    #                         if 'function' in tool and 'description' in tool['function']])
 # os.environ["http_proxy"] = "http://127.0.0.1:11434"
 # os.environ["https_proxy"] = "http://127.0.0.1:11434"
+# print(description)
 def print_model_response(response):
     print('Manus:')
     assistant_content = ''
@@ -27,20 +36,24 @@ def tackle_tool_calls(assistant_tool_calls):
     if assistant_tool_calls:
         print(f'Manus called {len(assistant_tool_calls)} tools:')
         for tool in assistant_tool_calls:
+            tool.function.name=tool.function.name.strip()
             if tool.function.name == "Finish Task":
-                will_continue = False
+                print("|- Task finished.")
+                return False
             if tool_to_call := tools_mapping.get(tool.function.name):
                 print('|- Calling tool: ', tool.function.name)
-                print('|  With arguments: ', tool.function.arguments)
+                print('|- With arguments: ', tool.function.arguments)
                 arguments_dict = json.loads(tool.function.arguments)
                 output = tool_to_call(**arguments_dict)
+                print('|-  Tool output: ', output)
                 messages.append({'role': 'tool', 'content': output})
             else:
-                print('|-  This tool not found: ', tool.function.name)
+                print('|-  This tool not found:\"', tool.function.name,"\"")
     else:
         print('Manus didn\'t call any tools.')
     
     return will_continue
+
 
 system_prompt = """
 你是一个人工智能助手，负责帮助用户完成任务。
@@ -63,10 +76,13 @@ system_prompt = """
   - 在任务分解阶段，你只能使用'Make Todo.md'工具。
   - 在任务执行阶段，你可以使用所有预定义的工具（除了'Make Todo.md'）。
   - 请把工具调用请求写入tool_calls字段，而并不是content字段。
+  - 你不能也不可能打开文本编辑器或命令行工具，写入文件的操作请用\"Write File\"工具。
   - 如果某个子任务不需要调用工具（例如只需要生成一段文本），那么你可以直接生成文本，然后继续下一个子任务。
   - 在任务执行阶段，如果遇到错误（例如工具调用失败），你应该暂停并通知用户，等待用户的指示，或者尝试修复（如果有备用方案）。
+  - 回答问题时除非用户明确指定外请使用中文
+这是每个工具的具体调用功能和需要的参数（用json格式表示）：
 """
-# 这是每个工具的具体调用功能和需要的参数（用json格式表示）：
+system_prompt+='\n'+description
 messages.append({
     'role': 'system',
     'content': system_prompt
@@ -109,7 +125,7 @@ while True:
         top_p=0.7,
         stream=True
     )
-    print(messages)
+    # print(messages)
     assistant_content, assistant_tool_calls = print_model_response(response)
     messages.append({'role': 'assistant', 'content': assistant_content, 'tool_calls': assistant_tool_calls})
     if not tackle_tool_calls(assistant_tool_calls):
