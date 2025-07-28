@@ -3,11 +3,15 @@ import openai
 from Tools.Tools import *
 
 def load_config(json_path):
-    data = ''
-    with open(json_path, 'r') as f:
-        data = f.read()
-    data = data.replace('\n', '')
-    return json.loads(data)
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Config file not found: {json_path}")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON in config file {json_path}: {str(e)}")
+    except Exception as e:
+        raise RuntimeError(f"Error loading config file {json_path}: {str(e)}")
 
 Tools_list = load_config('./Tools/Tools_Config.json')
 
@@ -19,12 +23,13 @@ for tool in Tools_list:
         Tools.append(Tools_list[tool])
 
 tools_mapping = {
-    'Run Linux Terminal Command': Run_Linux_Terminal_Command,
     'Make Todo.md': Make_Todo_File,
     'Write File': Write_File,
     'Append File': Append_File,
-    'Read File': Read_File
+    'Read File': Read_File,
+    'Run Command': Run_Command
 }
+   
 
 config = load_config("./Config/config.json")
 

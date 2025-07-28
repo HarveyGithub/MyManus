@@ -1,8 +1,10 @@
-import pty;
+
 import os
 import subprocess
+import platform
 
-def Run_Linux_Terminal_Command(Command):
+def Run_Command(Command):
+    """跨平台命令执行函数"""
     result = subprocess.run(
         'cd ./WorkSpace/ && ' + Command,
         stdout=subprocess.PIPE,
@@ -18,8 +20,10 @@ def Run_Linux_Terminal_Command(Command):
             return f"Stdout:{result.stdout}"
         else:
             return f"Stderr:{result.stderr}"
-    else:
-        return "Ran command successfully"
+    return "Ran command successfully"
+
+os_name = platform.system()
+print(f"当前操作系统为 {os_name}")
 
 def Make_Todo_File(Tittle, TodoList):
     with open("./WorkSpace/Todo.md", "w") as f:
@@ -68,4 +72,6 @@ def Append_File(FilePath, Content):
         return f"Error: {str(e)}"
     
 if __name__ == "__main__":
-    pty.spawn("/bin/bash")
+    if os_name.lower() == 'linux':
+        import pty
+        pty.spawn("/bin/bash")  

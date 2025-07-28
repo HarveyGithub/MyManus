@@ -1,11 +1,13 @@
 import json
-import os
+import platform
 from Load_config import Todo_List_tools, Tools, tools_mapping, Main_Model, Helper_Model, Main_Model_Name, Helper_Model_Name
 
 # 合并所有工具描述
 with open('./Tools/Tools_Config.json', 'r', encoding='utf-8') as f:
     tools_config = json.load(f)
     description=str(tools_config)
+    os_name = platform.system()
+    description += "请注意：这台电脑的系统为"+os_name.lower()+"，请根据实际情况选择合适的工具。"
     # description = '\n'.join([tool['function']['description'] 
     #                         for tool in tools_config.values() 
     #                         if 'function' in tool and 'description' in tool['function']])
@@ -90,7 +92,7 @@ messages.append({
 
 # user_task = input('请输入任务:')
 # user_task = "编写一个python的贪吃蛇游戏"
-user_task = ""
+user_task = "用c++写一个简单的猜数字游戏"
 
 messages.append({'role': 'user', 'content': user_task})
 
