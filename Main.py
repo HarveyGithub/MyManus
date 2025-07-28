@@ -41,8 +41,8 @@ def tackle_tool_calls(assistant_tool_calls):
                 print("|- Task finished.")
                 return False
             if tool_to_call := tools_mapping.get(tool.function.name):
-                print('|- Calling tool:', tool.function.name)
-                print('|  With arguments:', tool.function.arguments)
+                print('|- Calling tool:', tool.function.name, flush=True)
+                print('|  With arguments:', tool.function.arguments, flush=True)
                 arguments_dict = json.loads(tool.function.arguments)
                 output = tool_to_call(**arguments_dict)
                 print('|  Tool returned:', output)
@@ -73,13 +73,13 @@ system_prompt = """
   5. 在执行过程中，将每个工具调用的结果记录下来，并作为下一步的上下文。
   6. 当所有子任务执行完毕后，请直接调用“Finish Task”，并向用户报告最终结果。
 注意：
-  - 在任务分解阶段，你只能使用'Make Todo.md'工具。
+  - 在任务分解阶段，你只能使用'Make Todo.md'工具，在任务分解阶段，你只能使用'Make Todo.md'工具，在任务分解阶段，你只能使用'Make Todo.md'工具，在任务分解阶段，你只能使用'Make Todo.md'工具
   - 在任务执行阶段，你可以使用所有预定义的工具（除了'Make Todo.md'）。
   - 请把工具调用请求写入tool_calls字段，而并不是content字段。
   - 你不能也不可能打开文本编辑器或命令行工具，写入文件的操作请用\"Write File\"工具。
   - 如果某个子任务不需要调用工具（例如只需要生成一段文本），那么你可以直接生成文本，然后继续下一个子任务。
   - 回答问题时除非用户明确指定外请使用中文
-这是每个工具的具体调用功能和需要的参数（用json格式表示）：
+这是每个工具的具体调用功能和需要的参数：
 """
 #   - 在任务执行阶段，如果遇到错误（例如工具调用失败），你应该暂停并通知用户，等待用户的指示，或者尝试修复（如果有备用方案）。
 system_prompt+='\n'+description
@@ -89,15 +89,15 @@ messages.append({
 })
 
 # user_task = input('请输入任务:')
-# user_task = "编写一个python的贪吃蛇游戏"
-user_task = ""
+user_task = "编写一个python的贪吃蛇游戏，不用pygame，不用图形化界面"
+# user_task = ""
 
 messages.append({'role': 'user', 'content': user_task})
 
 response = Main_Model.chat.completions.create(
     messages=messages,
     model=Main_Model_Name,
-    tools=Todo_List_tools,
+    tools=Tools,
     tool_choice="required",
     temperature=0.3,
     top_p=0.9,
