@@ -1,3 +1,4 @@
 *.pyc
 __pycache__/
 Tools/__pycache__/
+.python-version
