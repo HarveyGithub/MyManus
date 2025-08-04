@@ -1,12 +1,11 @@
 
 import os
 import subprocess
-import platform
 
 def Run_Command(Command):
     """跨平台命令执行函数"""
     result = subprocess.run(
-        'cd ./WorkSpace/ && ' + Command,
+        'chmod +x ~/anaconda3/etc/profile.d/conda.sh && . ~/anaconda3/etc/profile.d/conda.sh && conda activate Manus_Sandbox && cd ./WorkSpace/ && ' + Command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True,
@@ -21,9 +20,6 @@ def Run_Command(Command):
         else:
             return f"Stderr:{result.stderr}"
     return "Ran command successfully"
-
-os_name = platform.system()
-print(f"当前操作系统为 {os_name}")
 
 def Make_Todo_File(Tittle, TodoList):
     with open("./WorkSpace/Todo.md", "w") as f:
@@ -70,8 +66,3 @@ def Append_File(FilePath, Content):
         return "Content appended successfully"
     except Exception as e:
         return f"Error: {str(e)}"
-    
-if __name__ == "__main__":
-    if os_name.lower() == 'linux':
-        import pty
-        pty.spawn("/bin/bash")  
