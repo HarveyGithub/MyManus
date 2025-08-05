@@ -89,7 +89,7 @@ messages.append({
 })
 
 # user_task = input('请输入任务:')
-user_task = "写一个python程序并保存，让它输出hello world"
+user_task = "请用python写一个猜数字游戏"
 
 messages.append({
     'role': 'user',
@@ -101,8 +101,8 @@ response = Model.chat.completions.create(
     model=Model_Name,
     tools=Todo_List_tools,
     tool_choice="required",
-    temperature=0.3,
-    top_p=0.9,
+    temperature=0.2,
+    top_p=0.4,
     stream=True
 )
 
@@ -127,7 +127,7 @@ while True:
         model=Model_Name,
         tools=Tools,
         tool_choice='auto',
-        temperature=0.3,
+        temperature=0.4,
         top_p=0.7,
         stream=True
     )

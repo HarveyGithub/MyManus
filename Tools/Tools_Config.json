@@ -54,7 +54,7 @@
                 "properties": {
                     "FilePath": {
                         "type": "string",
-                        "description": "要读取的文件路径(相对于WorkSpace目录)"
+                        "description": "要读取的文件路径(相对于WorkSpace目录)，已经为你填写./WorkSpace/，你的路径前面不用添加./WorkSpace/"
                     }
                 },
                 "required": ["FilePath"]
@@ -71,8 +71,7 @@
                 "properties": {
                     "FilePath": {
                         "type": "string",
-                        "description": "要写入的文件路径(相对于WorkSpace目录)"
-                    },
+                        "description": "要写入的文件路径(相对于WorkSpace目录)，已经为你填写./WorkSpace/，你的路径前面不用添加./WorkSpace/"},
                     "Content": {
                         "type": "string",
                         "description": "要写入的内容"
@@ -92,7 +91,7 @@
                 "properties": {
                     "FilePath": {
                         "type": "string",
-                        "description": "要追加的文件路径(相对于WorkSpace目录)"
+                        "description": "要追加的文件路径(相对于WorkSpace目录)，已经为你填写./WorkSpace/，你的路径前面不用添加./WorkSpace/"
                     },
                     "Content": {
                         "type": "string",
