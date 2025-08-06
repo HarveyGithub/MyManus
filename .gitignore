@@ -2,3 +2,4 @@
 __pycache__/
 Tools/__pycache__/
 .python-version
+.vscode/
