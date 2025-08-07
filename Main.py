@@ -1,14 +1,16 @@
-from init import *
-from prompts import *
+from Load_Config import *
+from Load_Prompts import *
 
-def create_response(Message, Client, Model_Name ,tool_choice, Tool_Config):
+Message = []
+
+def create_response(Message, Client, model, tools ,tool_choice="required", stream=True):
     response = Client.chat.completions.create(
-        model=Model_Name,
+        model=model,
         messages=Message,
         temperature=0.7,
-        tools=Tool_Config,
+        tools=tools,
         tool_choice=tool_choice,
-        stream=True
+        stream=stream
     )
     for chunk in response:
         if hasattr(chunk, "choices") and chunk.choices:
@@ -21,9 +23,14 @@ def create_response(Message, Client, Model_Name ,tool_choice, Tool_Config):
                 print(choice.delta.content, end="", flush=True)
     
 
-make_prompts(Message)
+load_prompts(Message)
 
-Message.append({'role':'user','content':'你喜欢撸管吗？'})
+Message.append({'role':'user','content':''})
 
-create_response(Message,Main_Client,Main_Model_Name,"none",Tool_Config)
-
+create_response(
+    Message=Message,
+    Client=Main_Client,
+    model=Main_Model_Name,
+    tools=Tools_List,
+    tool_choice="required",
+)
