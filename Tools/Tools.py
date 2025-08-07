@@ -4,8 +4,9 @@ import subprocess
 
 def Run_Command(Command):
     """跨平台命令执行函数"""
+    # print(Command)
     result = subprocess.run(
-        'chmod +x ~/anaconda3/etc/profile.d/conda.sh && . ~/anaconda3/etc/profile.d/conda.sh && conda activate Manus_Sandbox && cd ./WorkSpace/ && ' + Command,
+        'cd ./WorkSpace/ && ' + Command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True,
