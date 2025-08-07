@@ -20,5 +20,3 @@ def create_response(Message, tool_choice, Tool_Config):
             if hasattr(choice, "delta") and hasattr(choice.delta, "content") and choice.delta.content:
                 print(choice.delta.content, end="", flush=True)
     
-
-make_prompts(Message)

@@ -19,9 +19,3 @@ def load_prompts(Message):
 
     Message.append({'role':'system','content':assprompt})
     Message.append({'role':'system','content':assprompt})
-    
-    print(Message)
-    
-if __name__ == '__main__':
-    Message=[]
-    load_prompts(Message)
