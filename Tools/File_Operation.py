@@ -6,7 +6,7 @@ def Read_File(FilePath, StartLine=0, EndLine=0):
             idx = 0
             for line in f.readlines():
                 idx+=1
-                if idx > StartLine:
+                if idx >= StartLine:
                     content += line
                 if idx >= EndLine and EndLine != 0:
                     break
@@ -24,12 +24,4 @@ def Write_File(FilePath, Content):
     except Exception as e:
         return f"Error: {str(e)}"
 
-def Append_File(FilePath, Content):
-    try:
-        with open("./WorkSpace/" + FilePath, "a") as f:
-            f.write(Content)
-        return "Content appended successfully"
-    except Exception as e:
-        return f"Error: {str(e)}"
-os.system("pwd")
-print(Read_File("./Tools/Tools.py"))
+print(Read_File("./Tools/File_Operation.py", 19))
