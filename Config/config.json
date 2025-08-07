@@ -1,5 +1,0 @@
-{
-    "api_key": "ollama",
-    "base_url": "http://10.0.9.115:8080/v1/",
-    "Model_Name": "qwen2.5:14b"
-}
