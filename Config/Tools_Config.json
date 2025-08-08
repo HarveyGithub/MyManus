@@ -1,4 +1,11 @@
 {
+    "Task_Finish": {
+        "type": "function",
+        "function": {
+            "name": "Task_Finish",
+            "description": "通知用户任务已完成，用于通知用户任务已完成或执行成功。"
+        }
+    },
     "Read_File": {
         "type": "function",
         "function": {
@@ -9,7 +16,7 @@
                 "properties": {
                     "file_path": {
                         "type": "string",
-                        "description": "文件路径，支持相对路径（默认在~/MyManus目录下）和绝对路径。"
+                        "description": "文件路径，必须使用绝对路径（以/开头）。"
                     },
                     "start_line": {
                         "type": "integer",
@@ -34,7 +41,7 @@
                 "properties": {
                     "file_path": {
                         "type": "string",
-                        "description": "文件路径，支持相对路径（相对路径默认在~/MyManus目录下）和绝对路径。"
+                        "description": "文件路径，必须使用绝对路径（以/开头）。"
                     },
                     "content": {
                         "type": "string",
@@ -67,7 +74,7 @@
                 "properties": {
                     "file_path": {
                         "type": "string",
-                        "description": "文件路径，支持相对路径（默认在~/MyManus目录下）和绝对路径。"
+                        "description": "文件路径，必须使用绝对路径（以/开头）。"
                     },
                     "content": {
                         "type": "map",
@@ -75,6 +82,48 @@
                     }
                 },
                 "required": ["file_path", "content"]
+            }
+        }
+    },
+    "Send_Command": {
+        "type": "function",
+        "function": {
+            "name": "Send_Command",
+            "description": "在指定的shell会话中执行命令。用于运行代码、安装软件包或管理文件。",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "要执行的命令。"
+                    },
+                    "terminal_id": {
+                        "type": "string",
+                        "description": "（必填）目标终端的唯一ID。"
+                    },
+                    "dir": {
+                        "type": "string",
+                        "description": "执行命令的目录，支持相对路径（相对于~/Lysandra目录）和绝对路径。"
+                    }
+                },
+                "required": ["command", "terminal_id", "dir"]
+            }
+        }
+    },
+    "View_Terminal": {
+        "type": "function",
+        "function": {
+            "name": "View_Terminal",
+            "description": "查看指定Terminal的输出内容的内容。用于检查命令执行结果或监控输出。",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "terminal_id": {
+                        "type": "string",
+                        "description": "（必填）目标终端的唯一ID。"
+                    }
+                },
+                "required": ["terminal_id"]
             }
         }
     }

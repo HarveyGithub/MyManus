@@ -1,9 +1,12 @@
 from Load_Config import *
 from Load_Prompts import *
 
-Message = []
+Messages = []
 
-def create_response(Message, Client, model, tools ,tool_choice="required", stream=True):
+Terminals = TerminalManager()
+
+def create_response(Message, Client, model, tools = [] ,tool_choice="required", stream=True):
+    # print(f'Assistant: {Message}')
     response = Client.chat.completions.create(
         model=model,
         messages=Message,
@@ -12,25 +15,64 @@ def create_response(Message, Client, model, tools ,tool_choice="required", strea
         tool_choice=tool_choice,
         stream=stream
     )
-    for chunk in response:
-        if hasattr(chunk, "choices") and chunk.choices:
-            choice = chunk.choices[0]
-            if hasattr(choice, "delta") and hasattr(choice.delta, "tool_calls") and choice.delta.tool_calls:
-                for tool_call in choice.delta.tool_calls:
-                    print(f"Tool call: {tool_call}")
-
-            if hasattr(choice, "delta") and hasattr(choice.delta, "content") and choice.delta.content:
-                print(choice.delta.content, end="", flush=True)
+    Agent_Content = ''
+    Agent_Tool_Calls = []
+    for word in response:
+        print(word.choices[0].delta.content, end='', flush=True)
+        if word.choices[0].delta.content:
+            Agent_Content += word.choices[0].delta.content
+        if word.choices[0].delta.tool_calls:
+            Agent_Tool_Calls.extend(word.choices[0].delta.tool_calls)
     
+    return Agent_Content, Agent_Tool_Calls
 
-load_prompts(Message)
+def tackle_tool_calls(assistant_tool_calls):
+    if assistant_tool_calls:
+        
+        print(f'Manus called {len(assistant_tool_calls)} tools:')
+        
+        for tool in assistant_tool_calls:
+            tool.function.name=tool.function.name.strip()
+            if tool.function.name == "Task_Finish":
+                print("|- Task finished.")
+                return False
 
-Message.append({'role':'user','content':''})
+            if tool_to_call := Tools_Mapping.get(tool.function.name):
+                print('|- Calling tool:', tool.function.name, flush=True)
+                print('|  With arguments:', tool.function.arguments, flush=True)
+                
+                arguments_dict = json.loads(tool.function.arguments)
+                
+                if tool.function.name == "Send_Command" or tool.function.name == "View_Terminal":
+                    output = tool_to_call(**arguments_dict, manager = Terminals)
+                else:
+                    output = tool_to_call(**arguments_dict)
+                
+                print('|  Tool returned:', output)
+                Messages.append({'role': 'tool', 'content': output})
 
-create_response(
-    Message=Message,
-    Client=Main_Client,
-    model=Main_Model_Name,
-    tools=Tools_List,
-    tool_choice="required",
-)
+            else:
+                print('|-  This tool not found:\"', tool.function.name,"\"")
+    else:
+        print('Manus didn\'t call any tools.')
+    
+    return True
+    
+load_prompts(Messages)
+Messages.append({'role':'user','content':'请用python在写一个输出helloworld的程序，并测试。'})
+# Messages.append({'role':'user', 'content':'您在一个任务循环中运行，通过哪些步骤迭代完成任务？'})
+# print(Tools_List)
+
+while True:
+
+    Agent_Content, Agent_Tool_Calls = create_response(
+        Message=Messages,
+        Client=Main_Client,
+        model=Main_Model_Name,
+        tools=Tools_List,
+        tool_choice="auto",
+        stream=True
+    )
+    
+    if not tackle_tool_calls(Agent_Tool_Calls):
+        break

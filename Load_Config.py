@@ -1,5 +1,6 @@
 # from Tools.Tools import *
 from Tools.File_Operation import *
+from Tools.Terminal import *
 from openai import OpenAI
 import json
 import os
@@ -28,10 +29,14 @@ Tools_Config = load_config('./Config/Tools_Config.json')
 
 Tools_List = []
 for tool in Tools_Config:
-    Tools_List.append(tool)
+    Tools_List.append(Tools_Config[tool])
 
-Tool_Mapping={
+Tools_Mapping={
     "Read_File": Read_File,
     "Write_File": Write_File,
-    "Edit_File": Edit_File
+    "Edit_File": Edit_File,
+    "Send_Command": Send_Command,
+    "Send_Keys": Send_Keys,
+    "Kill_Terminal": Kill_Terminal,
+    "View_Terminal": View_Terminal
 }

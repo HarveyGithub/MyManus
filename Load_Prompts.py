@@ -18,4 +18,4 @@ def load_prompts(Message):
         print(f"错误: {str(e)}")
 
     Message.append({'role':'system','content':assprompt})
-    Message.append({'role':'system','content':assprompt})
+    Message.append({'role':'system','content':sysprompt})

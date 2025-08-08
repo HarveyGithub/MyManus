@@ -1,3 +1,4 @@
+import os
 def Read_File(file_path, start_line=0, end_line=0):
     try:
         content = ""
@@ -40,3 +41,6 @@ def Edit_File(file_path, content):
         return "错误: File not found"
     except Exception as e:
         return f"错误: {str(e)}"
+    
+if __name__ == '__main__':
+    print(Write_File(os.path.join("/home/harvey/Lysandra/WorkSpace/", "hello.py"), "print('Hello, World!')"))
