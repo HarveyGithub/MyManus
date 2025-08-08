@@ -8,14 +8,14 @@ def load_prompts(Message):
     except Exception as e:
         print(f"错误: {str(e)}")
     
-    sysprompt=''
-    try:
-        with open('./Prompts/system_prompts.md','r') as f:
-            sysprompt=f.read()
-    except FileNotFoundError:
-        print("错误: System prompts file not found")
-    except Exception as e:
-        print(f"错误: {str(e)}")
+    # sysprompt=''
+    # try:
+    #     with open('./Prompts/system_prompts.md','r') as f:
+    #         sysprompt=f.read()
+    # except FileNotFoundError:
+    #     print("错误: System prompts file not found")
+    # except Exception as e:
+    #     print(f"错误: {str(e)}")
 
     Message.append({'role':'system','content':assprompt})
-    Message.append({'role':'system','content':sysprompt})
+    # Message.append({'role':'system','content':sysprompt})
